@@ -33,7 +33,7 @@ theme = {
 	overrides: {
 		MuiDrawer: {
 			paper: {
-				backgroundColor: '#18202c',
+				backgroundColor: '#fff',
 			},
 		},
 		MuiButton: {
@@ -144,6 +144,7 @@ const styles = {
 	mainContent: {
 		flex: 1,
 		padding: '0px',
+		backgroundColor: '#E8F9ED',
 	},
 }
 
@@ -153,8 +154,9 @@ function Layout({ location, title, children, classes }) {
 
 	return (
 		<MuiThemeProvider theme={theme}>
+			<CssBaseline />
+			<Header onDrawerToggle={() => setMobileOpen(!mobileOpen)} />
 			<div className={classes.root}>
-				<CssBaseline />
 				<nav className={classes.drawer}>
 					<Hidden smUp implementation="js">
 						<Navigator
@@ -169,7 +171,6 @@ function Layout({ location, title, children, classes }) {
 					</Hidden>
 				</nav>
 				<div className={classes.appContent}>
-					<Header onDrawerToggle={() => setMobileOpen(!mobileOpen)} title={title} />
 					<main className={classes.mainContent}>{children}</main>
 				</div>
 			</div>

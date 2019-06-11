@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link } from 'gatsby'
+import { Link, navigate } from "gatsby"
+import { getUser, isLoggedIn, logout } from "../../services/auth"
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
@@ -10,38 +11,16 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import HomeIcon from '@material-ui/icons/Home'
-import PeopleIcon from '@material-ui/icons/People'
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import NotificationIcon from '@material-ui/icons/Email'
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded'
-import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual'
-import PublicIcon from '@material-ui/icons/Public'
-import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet'
-import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent'
-import TimerIcon from '@material-ui/icons/Timer'
+import HistoryIcon from '@material-ui/icons/History'
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import PeopleIcon from '@material-ui/icons/People'
 import SettingsIcon from '@material-ui/icons/Settings'
-import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup'
-import Logo from 'components/Logo'
-const categories = [
-	{
-		id: 'Develop',
-		children: [
-			{ id: 'Authentication', icon: <PeopleIcon />, page: 'authentication' },
-			{ id: 'Database', icon: <DnsRoundedIcon />, page: 'database' },
-			{ id: 'Storage', icon: <PermMediaOutlinedIcon />, page: 'storage' },
-			{ id: 'Hosting', icon: <PublicIcon />, page: 'hosting' },
-			{ id: 'Functions', icon: <SettingsEthernetIcon />, page: 'functions' },
-			{ id: 'ML Kit', icon: <SettingsInputComponentIcon />, page: 'ml' },
-		],
-	},
-	{
-		id: 'Quality',
-		children: [
-			{ id: 'Analytics', icon: <SettingsIcon />, page: 'analytics' },
-			{ id: 'Performance', icon: <TimerIcon />, page: 'performance' },
-			{ id: 'Test Lab', icon: <PhonelinkSetupIcon />, page: 'lab' },
-		],
-	},
-]
+import SignoutIcon from '@material-ui/icons/PhotoSizeSelectActual'
 
 const styles = theme => ({
 	categoryHeader: {
@@ -51,116 +30,267 @@ const styles = theme => ({
 	categoryHeaderPrimary: {
 		color: theme.palette.common.white,
 	},
+	lists: {
+		marginTop: 50,
+	},
+	nested: {
+		paddingTop: 12,
+		paddingBottom: 12,
+		paddingLeft: 55,
+	},
 	item: {
-		paddingTop: 4,
-		paddingBottom: 4,
-		color: 'rgba(255, 255, 255, 0.7)',
+		marginTop: 15,
+		marginBottom: 15,
+		paddingTop: 12,
+		paddingBottom: 12,
+		paddingLeft: 20,
+		color: '#5E5E5E',
+	},
+	text: {
+		fontSize: '0.9em',
 	},
 	itemCategory: {
-		backgroundColor: '#232f3e',
+		backgroundColor: '#fff',
 		boxShadow: '0 -1px 0 #404854 inset',
-		paddingTop: 16,
-		paddingBottom: 16,
-	},
-	firebase: {
-		fontSize: 24,
-		fontFamily: theme.typography.fontFamily,
-		color: theme.palette.common.white,
+		paddingTop: 12,
+		paddingBottom: 12,
+		marginTop: 0,
+		marginBottom: 0,
 	},
 	itemActionable: {
 		'&:hover': {
-			backgroundColor: 'rgba(255, 255, 255, 0.08)',
+			backgroundColor: 'rgba(179, 140, 10, 0.1)',
 		},
 	},
 	itemActiveItem: {
-		color: '#4fc3f7',
+		color: '#B38C0A',
+		backgroundColor: 'rgba(179, 140, 10, 0.1)',
+		fontWeight: 600,
+		paddingLeft: 17,
+		borderLeft: '3px solid #B38C0A',
 	},
-	itemPrimary: {
-		color: 'inherit',
-		fontSize: theme.typography.fontSize,
-		'&$textDense': {
-			fontSize: theme.typography.fontSize,
-		},
+	decoration: {
+		textDecoration: 'none',
+		color: '#5E5E5E',
 	},
 	textDense: {},
-	divider: {
-		marginTop: theme.spacing.unit * 2,
-	},
 })
 
 function Navigator({ classes, location = null, ...rest }) {
 	const matchPath = location ? location.pathname.replace(/\//g, '') : null
+
+	const [open, setOpen] = React.useState(true);
+
+	function handleClickRequest() {
+		setOpen(!open);
+	}
+
+	function handleClickHistory() {
+		setOpen(!open);
+	}
+	
 	return (
 		<Drawer variant="permanent" {...rest}>
-			<List disablePadding>
-				<ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
-					<Grid container alignItems="center" spacing={8} direction="row">
-						<Grid item>
-							<Logo />
-						</Grid>
-						<Grid item>Paperbase</Grid>
-					</Grid>
+
+			<List
+				component="nav"
+				aria-labelledby="nested-list-subheader"
+				className={classes.root}
+				>
+				<ListItem className={classes.lists}>
+					<ListItemText></ListItemText>
 				</ListItem>
 
-				<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">
-					<ListItem className={classNames(classes.item, classes.itemCategory)}>
+				<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+					<ListItem
+						button
+						dense
+						className={classNames(
+							classes.item,
+							classes.itemActionable
+						)}>
 						<ListItemIcon>
-							<HomeIcon />
+							<NotificationIcon />
 						</ListItemIcon>
-						<ListItemText
-							classes={{
-								primary: classes.itemPrimary,
-							}}
-						>
-							Project Overview
-						</ListItemText>
+						<ListItemText className={classes.text} primary="Notifications" />
 					</ListItem>
 				</Link>
-				{categories.map(({ id, children }) => (
-					<React.Fragment key={id}>
-						<ListItem className={classes.categoryHeader}>
-							<ListItemText
-								classes={{
-									primary: classes.categoryHeaderPrimary,
+
+				<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/adverts">
+					<ListItem
+						button
+						dense
+						className={classNames(
+							classes.item,
+							classes.itemActionable,
+							classes.itemActiveItem
+						)}>
+						<ListItemIcon>
+							<DnsRoundedIcon />
+						</ListItemIcon>
+						<ListItemText className={classes.text} primary="Adverts" />
+					</ListItem>
+				</Link>
+
+				<ListItem
+					button
+					dense
+					onClick={handleClickRequest}
+					className={classNames(
+						classes.item,
+						classes.itemActionable
+					)}>
+					<ListItemIcon>
+						<AssignmentIcon />
+					</ListItemIcon>
+					<ListItemText className={classes.text} primary="Requests" />
+					{open ? <ExpandLess /> : <ExpandMore />}
+				</ListItem>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/debit-card-request">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Debit card request" />
+							</ListItem>
+						</Link>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Cheque book request" />
+							</ListItem>
+						</Link>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Transaction Limit" />
+							</ListItem>
+						</Link>
+					</List>
+				</Collapse>
+
+				<ListItem
+					button
+					dense
+					onClick={handleClickHistory}
+					className={classNames(
+						classes.item,
+						classes.itemActionable
+					)}>
+					<ListItemIcon>
+						<HistoryIcon />
+					</ListItemIcon>
+					<ListItemText className={classes.text} primary="Request History" />
+					{open ? <ExpandLess /> : <ExpandMore />}
+				</ListItem>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Debit card request" />
+							</ListItem>
+						</Link>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Cheque book request" />
+							</ListItem>
+						</Link>
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+							<ListItem
+								button
+								dense
+								className={classNames(
+									classes.itemActionable,
+									classes.nested
+								)}>
+								<ListItemText className={classes.text} primary="Transaction Limit" />
+							</ListItem>
+						</Link>
+					</List>
+				</Collapse>
+				
+				<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/admins">
+					<ListItem
+						button
+						dense
+						className={classNames(
+							classes.item,
+							classes.itemActionable
+						)}>
+						<ListItemIcon>
+							<PeopleIcon />
+						</ListItemIcon>
+						<ListItemText className={classes.text} primary="Admins" />
+					</ListItem>
+				</Link>
+
+				<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/settings">
+					<ListItem
+						button
+						dense
+						className={classNames(
+							classes.item,
+							classes.itemActionable
+						)}>
+						<ListItemIcon>
+							<SettingsIcon />
+						</ListItemIcon>
+						<ListItemText className={classes.text} primary="Profile Settings" />
+					</ListItem>
+				</Link>
+
+				<ListItem
+					button
+					dense
+					className={classNames(
+						classes.item,
+						classes.itemActionable
+					)}>
+					<ListItemIcon>
+						<SignoutIcon />
+					</ListItemIcon>
+					<ListItemText className={classes.text}>
+						{isLoggedIn() ? (
+							<a
+								href="/"
+								style={{ textDecoration: 'none', color: 'inherit', width: '100px' }}
+								onClick={event => {
+								event.preventDefault()
+								logout(() => navigate(`/app/login`))
 								}}
 							>
-								{id}
-							</ListItemText>
-						</ListItem>
-						{children.map(({ id: childId, icon, page = null }) => {
-							return page ? (
-								<Link
-									key={childId}
-									style={{ textDecoration: 'none', color: 'inherit' }}
-									to={`/${page}`}
-								>
-									<ListItem
-										button
-										dense
-										className={classNames(
-											classes.item,
-											classes.itemActionable,
-											(matchPath && page ? matchPath === page : false) && classes.itemActiveItem
-										)}
-									>
-										<ListItemIcon>{icon}</ListItemIcon>
-										<ListItemText
-											classes={{
-												primary: classes.itemPrimary,
-												textDense: classes.textDense,
-											}}
-										>
-											{childId}
-										</ListItemText>
-									</ListItem>
-								</Link>
-							) : (
-								<div />
-							)
-						})}
-						<Divider className={classes.divider} />
-					</React.Fragment>
-				))}
+								Logout
+							</a>
+						) : null}
+					</ListItemText>
+				</ListItem>
 			</List>
 		</Drawer>
 	)

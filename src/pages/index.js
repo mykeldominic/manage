@@ -1,15 +1,19 @@
-import React from 'react'
+import React from "react"
+import { Link, navigate } from "gatsby"
+import { getUser, isLoggedIn } from "../services/auth"
 import { graphql } from 'gatsby'
-import Layout from 'components/Layout'
 import PropTypes from 'prop-types'
-import Content from 'components/Content'
 
 function DashboardIndex({ data, location }) {
 	const { title } = data.site.siteMetadata
 	return (
-		<Layout location={location} title={title}>
-			<Content />
-		</Layout>
+		<div>
+			{isLoggedIn() ? (
+					navigate(`/notifications`)
+			) : (
+				navigate(`/app/login`)
+			)}
+		</div>
 	)
 }
 DashboardIndex.propTypes = {

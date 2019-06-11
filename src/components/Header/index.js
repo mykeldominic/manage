@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { getUser } from "../../services/auth"
 import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -14,9 +15,16 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 
-const lightColor = 'rgba(255, 255, 255, 0.7)'
+const lightColor = '#131212'
 
 const styles = theme => ({
+	appBar: {
+		zIndex: theme.zIndex.drawer + 1,
+		padding: 4,
+		background: '#fff',
+		borderTop: '3px solid #58966A',
+		borderBottom: '1.5px solid #EDEDED',
+	},
 	secondaryBar: {
 		zIndex: 0,
 	},
@@ -29,8 +37,9 @@ const styles = theme => ({
 	link: {
 		color: lightColor,
 		'&:hover': {
-			color: theme.palette.common.white,
+			color: '#131212',
 		},
+		fontWeight: 500,
 	},
 	button: {
 		borderColor: lightColor,
@@ -45,7 +54,7 @@ const styles = theme => ({
 function Header({ classes, onDrawerToggle, title }) {
 	return (
 		<>
-			<AppBar color="primary" position="sticky" elevation={0}>
+			<AppBar color="primary" position="sticky" className={classes.appBar} elevation={0}>
 				<Toolbar>
 					<Grid container spacing={8} alignItems="center">
 						<Hidden smUp>
@@ -60,11 +69,8 @@ function Header({ classes, onDrawerToggle, title }) {
 								</IconButton>
 							</Grid>
 						</Hidden>
-						<Grid item xs />
-						<Grid item>
-							<Typography className={classes.link} component="a" href="#">
-								Go to docs
-							</Typography>
+						<Grid item xs>
+							<img src="/images/logo.png" />
 						</Grid>
 						<Grid item>
 							<Tooltip title="Alerts • No alters">
@@ -74,13 +80,15 @@ function Header({ classes, onDrawerToggle, title }) {
 							</Tooltip>
 						</Grid>
 						<Grid item>
-							<IconButton color="inherit" className={classes.iconButtonAvatar}>
-								<Avatar className={classes.avatar} src="/images/avatar.jpg" />
-							</IconButton>
+							<Grid container alignItems="center" spacing={16} direction="row">
+								<Avatar className={classes.avatar} src="/images/user.png" />
+								<Grid item className={classes.link}>{getUser().name}</Grid>
+							</Grid>
 						</Grid>
 					</Grid>
 				</Toolbar>
 			</AppBar>
+			{/*
 			<AppBar component="div" className={classes.secondaryBar} color="primary" position="static" elevation={0}>
 				<Toolbar>
 					<Grid container alignItems="center" spacing={8}>
@@ -104,6 +112,7 @@ function Header({ classes, onDrawerToggle, title }) {
 					</Grid>
 				</Toolbar>
 			</AppBar>
+			yjn*/}
 		</>
 	)
 }
