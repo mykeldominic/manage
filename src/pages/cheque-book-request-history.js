@@ -5,7 +5,7 @@ import { navigate } from "gatsby"
 import { isLoggedIn } from "../services/auth"
 import Layout from 'components/Layout'
 import Typography from '@material-ui/core/Typography'
-import PageTables from 'components/Table/d-table'
+import PageTables from 'components/Table/history-table'
 import Button from '@material-ui/core/Button'
 
 /**function auth() {
@@ -16,21 +16,28 @@ import Button from '@material-ui/core/Button'
 	)}
 }**/
 
-function passData(first, second, third, fourth, fifth, sixth) {
-	return { first, second, third, fourth, fifth, sixth };
+function passData(first, second, third, fourth, fifth) {
+	return { first, second, third, fourth, fifth };
 }
 const odata = [
-	passData('Date', 'Customer', 'Card type', 'Pickup Branch', 'Status', 'Action'),
+	passData('Date', 'Customer', 'Leaves', 'Pickup Branch', 'Handled by'),
 ];
 
-function createData(date, customername, customerphone, card, branch, status, action) {
-	return { date, customername, customerphone, card, branch, status, action };
+function createData(date, customername, customeraccount, leaves, branch, initials, handled) {
+	return { date, customername, customeraccount, leaves, branch, initials, handled };
+}
+
+function createInitials(firstName, lastName){
+	var a = firstName.split("")[0];
+	var b = lastName.split("")[0];
+	return a+b;
 }
 
 const tdata = [
-	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', 'Mastercard', 'Ikeja', 'Pending', 'Start Process'),
-    createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', 'Verve', 'Ikorodu', 'Processing', 'Mark as done'),
-    createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', 'Visa', 'Ajah', 'Pending', 'Start Process'),
+	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', '40 Leaves', 'Ikeja', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
+    createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', '100 Leaves', 'Ikorodu', createInitials('Tochi', 'Onuchukwu'), 'Tochi Onuchukwu'),
+    createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', '40 Leaves', 'Ajah', createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi'),
+    createData('2nd Sept, 2019', 'Tochi Onuchukwu', '0149988767', '100 Leaves', 'Ikeja', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
 ];
 
 
@@ -52,14 +59,14 @@ class DebitCardRequestPage extends React.Component {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">
-						<p className="n-headtext">DEBIT CARD REQUESTS (0)</p>
-						<p>Handle all debit card requests from your customers</p>
+						<p className="n-headtext">CHEQUE BOOK HISTORY (0)</p>
+						<p>All handled cheque book requests</p>
 						
 						<div className="n-box">
 							<img src="/images/safebox.png" className="n-img" />
 							
-							<p className="n-headtext">NO DEBIT CARD REQUEST</p>
-							<p className="n-center">You haven’t received any debit card request from <br></br>your customers.</p>
+							<p className="n-headtext">NO CHEQUE BOOK REQUEST</p>
+							<p className="n-center">No cheque book request has been handled</p>
 						</div>
 					</div>
 				</Layout>
@@ -69,8 +76,8 @@ class DebitCardRequestPage extends React.Component {
         return (
 			<Layout location={location} title={pageTitle}>
 				<div className="n-container">
-					<p className="n-headtext">DEBIT CARD REQUESTS ({tdata.length})</p>
-                    <p>Handle all debit card requests from your customers</p>
+					<p className="n-headtext">CHEQUE BOOK HISTORY ({tdata.length})</p>
+                    <p>All handled cheque book requests</p>
 					
 					<div className="n-filterrow">
 						

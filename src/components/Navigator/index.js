@@ -159,7 +159,7 @@ function Navigator({ classes, location = null, ...rest }) {
 								<ListItemText className={classes.text} primary="Debit card request" />
 							</ListItem>
 						</Link>
-						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/cheque-book-request">
 							<ListItem
 								button
 								dense
@@ -170,7 +170,7 @@ function Navigator({ classes, location = null, ...rest }) {
 								<ListItemText className={classes.text} primary="Cheque book request" />
 							</ListItem>
 						</Link>
-						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/transaction-limit">
 							<ListItem
 								button
 								dense
@@ -200,7 +200,7 @@ function Navigator({ classes, location = null, ...rest }) {
 				</ListItem>
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/debit-card-request-history">
 							<ListItem
 								button
 								dense
@@ -211,7 +211,7 @@ function Navigator({ classes, location = null, ...rest }) {
 								<ListItemText className={classes.text} primary="Debit card request" />
 							</ListItem>
 						</Link>
-						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/cheque-book-request-history">
 							<ListItem
 								button
 								dense
@@ -222,7 +222,7 @@ function Navigator({ classes, location = null, ...rest }) {
 								<ListItemText className={classes.text} primary="Cheque book request" />
 							</ListItem>
 						</Link>
-						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/notifications">
+						<Link style={{ textDecoration: 'none', color: 'inherit' }} to="/transaction-limit-history">
 							<ListItem
 								button
 								dense

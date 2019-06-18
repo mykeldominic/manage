@@ -1,8 +1,9 @@
 import React from 'react'
+import axios from "axios";
 import PropTypes from 'prop-types'
 import './notifications.css'
 import { navigate } from "gatsby"
-import { isLoggedIn } from "../services/auth"
+import { isLoggedIn, getToken } from "../services/auth"
 import Layout from 'components/Layout'
 import Modal from 'components/Modal/modal'
 import ModalSub from 'components/Modal/modalsub'
@@ -19,6 +20,8 @@ import Button from '@material-ui/core/Button'
 	)}
 }**/
 
+const SERVER_URL = 'http://173.255.212.65:8080';
+
 function passData(first, second, third) {
 	return { first, second, third };
 }
@@ -34,6 +37,36 @@ function createInitials(firstName, lastName){
 	var a = firstName.split("")[0];
 	var b = lastName.split("")[0];
 	return a+b;
+}
+
+export const getNotifications = async () => {
+	const NOTIFICATIONS_ENDPOINT = SERVER_URL+'/v1/api/app/admin/client-app/notifications';
+	console.log(getToken());
+	
+    let config = {
+        headers: {
+			"client-key":"julklsjdmmaludnm01#",
+			"Authorization": "Bearer "+getToken().token
+        }
+    }
+    let data = {
+        // "email": email,
+        // "password": password
+    }
+    
+    try {
+        let response = await axios.get(NOTIFICATIONS_ENDPOINT, config);
+        console.log(response);
+        if (response.status === 200) {
+            console.log(response);
+        } else {
+            //display error
+            console.log('error');
+        }
+    } catch (error) {
+        console.log("the error")
+        console.log(error);
+    }
 }
 
 const tdata = [
@@ -65,11 +98,13 @@ class NotificationsPage extends React.Component {
 	
 	render () {
 
+		getNotifications()
+
 		const pageTitle = location ? location.pathname.replace(/\//g, '') : ''
 
 		/**auth();*/
 
-		if (!tdata) {
+		if (tdata.length == 0) {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">

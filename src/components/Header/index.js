@@ -82,7 +82,7 @@ function Header({ classes, onDrawerToggle, title }) {
 						<Grid item>
 							<Grid container alignItems="center" spacing={16} direction="row">
 								<Avatar className={classes.avatar} src="/images/user.png" />
-								<Grid item className={classes.link}>{getUser().name}</Grid>
+								<Grid item className={classes.link}>{getUser().firstName}</Grid>
 							</Grid>
 						</Grid>
 					</Grid>

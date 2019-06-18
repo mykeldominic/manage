@@ -20,17 +20,18 @@ function passData(first, second, third, fourth, fifth, sixth) {
 	return { first, second, third, fourth, fifth, sixth };
 }
 const odata = [
-	passData('Date', 'Customer', 'Card type', 'Pickup Branch', 'Status', 'Action'),
+	passData('Date', 'Customer', 'Leaves', 'Pickup Branch', 'Status', 'Action'),
 ];
 
-function createData(date, customername, customerphone, card, branch, status, action) {
-	return { date, customername, customerphone, card, branch, status, action };
+function createData(date, customername, customerphone, leaves, branch, status, action) {
+	return { date, customername, customerphone, leaves, branch, status, action };
 }
 
 const tdata = [
-	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', 'Mastercard', 'Ikeja', 'Pending', 'Start Process'),
-    createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', 'Verve', 'Ikorodu', 'Processing', 'Mark as done'),
-    createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', 'Visa', 'Ajah', 'Pending', 'Start Process'),
+	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', '40 Leaves', 'Ikeja', 'Pending', 'Start Process'),
+    createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', '100 Leaves', 'Ikorodu', 'Processing', 'Mark as done'),
+    createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', '40 Leaves', 'Ajah', 'Pending', 'Start Process'),
+    createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', '40 Leaves', 'Ikeja', 'Pending', 'Start Process'),
 ];
 
 
@@ -52,14 +53,14 @@ class DebitCardRequestPage extends React.Component {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">
-						<p className="n-headtext">DEBIT CARD REQUESTS (0)</p>
-						<p>Handle all debit card requests from your customers</p>
+						<p className="n-headtext">CHEQUE BOOK REQUESTS (0)</p>
+						<p>Handle all cheque book requests from your customers</p>
 						
 						<div className="n-box">
 							<img src="/images/safebox.png" className="n-img" />
 							
-							<p className="n-headtext">NO DEBIT CARD REQUEST</p>
-							<p className="n-center">You haven’t received any debit card request from <br></br>your customers.</p>
+							<p className="n-headtext">NO CHEQUE BOOK REQUEST</p>
+							<p className="n-center">You haven’t received any cheque book request from <br></br>your customers.</p>
 						</div>
 					</div>
 				</Layout>
@@ -69,8 +70,8 @@ class DebitCardRequestPage extends React.Component {
         return (
 			<Layout location={location} title={pageTitle}>
 				<div className="n-container">
-					<p className="n-headtext">DEBIT CARD REQUESTS ({tdata.length})</p>
-                    <p>Handle all debit card requests from your customers</p>
+					<p className="n-headtext">CHEQUE BOOK REQUESTS ({tdata.length})</p>
+                    <p>Handle all cheque book requests from your customers</p>
 					
 					<div className="n-filterrow">
 						

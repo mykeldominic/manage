@@ -89,20 +89,7 @@ const styles = theme => ({
     fontSize: '0.9em',
     letterSpacing: '0.02em',
   },
-  startbutton: {
-    border: '1.5px solid #427A52',
-    borderRadius: '3px',
-	padding: '6px 20px',
-    color: '#427A52',
-    fontWeight: 'bold',
-    fontSize: '0.9em',
-    background: '#fff',
-    letterSpacing: '0.02em',
-    '&:hover': {
-        opacity: '0.9',
-    },
-  },
-  markbutton: {
+  approvebutton: {
     border: '1.5px solid #427A52',
     borderRadius: '3px',
 	padding: '6px 20px',
@@ -111,6 +98,20 @@ const styles = theme => ({
     fontSize: '0.9em',
     background: '#427A52',
     letterSpacing: '0.02em',
+    '&:hover': {
+        opacity: '0.9',
+    },
+  },
+  declinebutton: {
+    border: '1.5px solid #C63232',
+    borderRadius: '3px',
+	padding: '6px 20px',
+    color: '#C63232',
+    fontWeight: 'bold',
+    fontSize: '0.9em',
+    background: '#fff',
+    letterSpacing: '0.02em',
+    marginLeft: '30px',
     '&:hover': {
         opacity: '0.9',
     },
@@ -130,7 +131,6 @@ function PageTables({ data, classes, rows, headers }) {
               <StyledTableCell className={classes.headRowCell}>{row.third}</StyledTableCell>
               <StyledTableCell className={classes.headRowCell}>{row.fourth}</StyledTableCell>
               <StyledTableCell className={classes.headRowCell}>{row.fifth}</StyledTableCell>
-              <StyledTableCell className={classes.headRowCell}>{row.sixth}</StyledTableCell>
             </TableRow>
           ))}
         </TableHead>
@@ -145,17 +145,14 @@ function PageTables({ data, classes, rows, headers }) {
                     <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.customerphone}</p>
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.card}{row.leaves}
+                    {row.initiallimit}
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.branch}
+                    {row.newlimit}
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    <div className={classes.pendingstatus}>{row.status}</div>
-              </StyledTableCell>
-              <StyledTableCell className={classes.tableCell}>
-                    <Button className={classes.startbutton}>{row.action}</Button>
-                    {/** <Button className={classes.markbutton}>{row.action}</Button> */}
+                    <Button className={classes.approvebutton}>Approve</Button>
+                    <Button className={classes.declinebutton}>Decline</Button>
               </StyledTableCell>
             </StyledTableRow>
           ))}

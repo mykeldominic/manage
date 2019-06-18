@@ -56,12 +56,12 @@ const styles = theme => ({
     borderBottom: '0.75px solid rgba(224, 224, 224, 0.5)',
   },
   flex: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, auto)',
+    display: 'flex',
     borderBottom: '#fff',
+    alignItems: 'center',
   },
   initials: {
-	padding: '10px',
+	  padding: '10px 9px',
     color: '#B38C0A',
     background: 'rgba(179, 140, 10, 0.2)',
     letterSpacing: '0.02em',
@@ -130,7 +130,6 @@ function PageTables({ data, classes, rows, headers }) {
               <StyledTableCell className={classes.headRowCell}>{row.third}</StyledTableCell>
               <StyledTableCell className={classes.headRowCell}>{row.fourth}</StyledTableCell>
               <StyledTableCell className={classes.headRowCell}>{row.fifth}</StyledTableCell>
-              <StyledTableCell className={classes.headRowCell}>{row.sixth}</StyledTableCell>
             </TableRow>
           ))}
         </TableHead>
@@ -142,20 +141,17 @@ function PageTables({ data, classes, rows, headers }) {
               </StyledTableCell>
               <StyledTableCell className={classes.padding}>
                     <p style={{ padding: '0', margin: '0' }}>{row.customername}</p>
-                    <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.customerphone}</p>
+                    <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.customeraccount}</p>
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.card}{row.leaves}
+                    {row.card}{row.leaves}{row.initiallimit}
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.branch}
+                    {row.branch}{row.newlimit}
               </StyledTableCell>
-              <StyledTableCell className={classes.tableCell}>
-                    <div className={classes.pendingstatus}>{row.status}</div>
-              </StyledTableCell>
-              <StyledTableCell className={classes.tableCell}>
-                    <Button className={classes.startbutton}>{row.action}</Button>
-                    {/** <Button className={classes.markbutton}>{row.action}</Button> */}
+              <StyledTableCell className={classNames(classes.tableCell, classes.flex )}>
+                  <div className={classes.initials}>{row.initials}</div>
+                  {row.handled}
               </StyledTableCell>
             </StyledTableRow>
           ))}

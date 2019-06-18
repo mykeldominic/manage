@@ -27,8 +27,8 @@
 
 .n-box {
     text-align: center;
-    margin-top: 40;
-    padding: 80;
+    margin-top: 40px;
+    padding: 80px;
     background: #FFF;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
     border-radius: 3px;
@@ -113,6 +113,25 @@
     background: none;
 }
 
+.t-buttons {
+    text-align: right;
+    margin-bottom: -30px;
+}
+
+.btn-cancel {
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+    background: none;
+    color: #376444;
+    letter-spacing: 0.04em;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+    padding: 13px 0px;
+}
+
 .btn-continue {
     border: none;
     cursor: pointer;
@@ -130,6 +149,7 @@
 
 .info {
     text-align: center;
+    padding-bottom: 60px;
 }
 
 .check-img{
@@ -141,5 +161,4 @@
     font-weight: bold;
     font-size: 1.15em;
     margin-top: 30px;
-    margin-bottom: 60px;
 }

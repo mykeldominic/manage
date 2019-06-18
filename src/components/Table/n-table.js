@@ -78,9 +78,9 @@ function PageTables({ data, classes, rows, headers }) {
         <TableHead>
           {headers.map(row => (
             <TableRow className={classes.headRow}>
-              <StyledTableCell className={classes.headRowCell} style={{ width: '15%' }}>{row.first}</StyledTableCell>
+              <StyledTableCell className={classes.headRowCell} style={{ width: '140px' }}>{row.first}</StyledTableCell>
               <StyledTableCell className={classes.headPadding}>{row.second}</StyledTableCell>
-              <StyledTableCell className={classes.headRowCell} style={{ width: '15%' }}>{row.third}</StyledTableCell>
+              <StyledTableCell className={classes.headRowCell} style={{ width: '200px' }}>{row.third}</StyledTableCell>
             </TableRow>
           ))}
         </TableHead>

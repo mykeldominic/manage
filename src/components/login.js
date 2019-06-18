@@ -22,7 +22,13 @@ class Login extends React.Component {
 
 	handleSubmit = event => {
 		event.preventDefault()
-		handleLogin(this.state)
+		handleLogin(this.state).then(res => {
+			if (isLoggedIn()) {
+				navigate(`/notifications`)
+			}
+		})
+		
+		//navigate(`/notifications`)
 	}
 
 	render() {
@@ -41,7 +47,8 @@ class Login extends React.Component {
 							method="post"
 							onSubmit={event => {
 								this.handleSubmit(event)
-								navigate(`/notifications`)
+								
+								// navigate(`/notifications`)
 							}}
 						>
 							<p className="sign-in-text">Sign in to your account</p>
