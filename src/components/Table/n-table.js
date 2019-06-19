@@ -86,14 +86,14 @@ function PageTables({ data, classes, rows, headers }) {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <StyledTableRow key={row.date} className={classes.tableRow}>
+            <StyledTableRow key={row.id} className={classes.tableRow}>
               <StyledTableCell className={classes.tableCell} component="th" scope="row">
-                {row.date}
+                {row.dateCreated}
               </StyledTableCell>
               <StyledTableCell className={classes.padding}>{row.message}</StyledTableCell>
               <StyledTableCell className={classNames(classes.tableCell, classes.flex )}>
                   <div className={classes.initials}>{row.initials}</div>
-                  {row.sortby}
+                  {row.createdBy}
               </StyledTableCell>
             </StyledTableRow>
           ))}

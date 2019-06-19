@@ -29,47 +29,13 @@ const odata = [
 	passData('Date', 'Message', 'Sort By'),
 ];
 
-function createData(date, message, initials, sortby) {
-	return { date, message, initials, sortby };
-}
-
-function createInitials(firstName, lastName){
+function createInitials(createdBy){
 	var a = firstName.split("")[0];
 	var b = lastName.split("")[0];
 	return a+b;
 }
 
-export const getNotifications = async () => {
-	const NOTIFICATIONS_ENDPOINT = SERVER_URL+'/v1/api/app/admin/client-app/notifications';
-	console.log(getToken());
-	
-    let config = {
-        headers: {
-			"client-key":"julklsjdmmaludnm01#",
-			"Authorization": "Bearer "+getToken().token
-        }
-    }
-    let data = {
-        // "email": email,
-        // "password": password
-    }
-    
-    try {
-        let response = await axios.get(NOTIFICATIONS_ENDPOINT, config);
-        console.log(response);
-        if (response.status === 200) {
-            console.log(response);
-        } else {
-            //display error
-            console.log('error');
-        }
-    } catch (error) {
-        console.log("the error")
-        console.log(error);
-    }
-}
-
-const tdata = [
+var tdata = [
 	createData('2nd Jun, 2019', 'Enjoy this festive season as with us as we are giving away N1000,000 to 10 lucky owners of surrent account', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
 	createData('25th May, 2019', 'Fraud Alert - Dear customer please do not disclose your internet banking pin, your ATM pin or your Bank verification number BVN to anyone to avoid been scammed', createInitials('Tochi', 'Onuchukwu'), 'Tochi Onuchukwu'),
 	createData('8th Jan, 2019', 'Enjoy this festive season as with us as we are giving away N1000,000 to 10 lucky owners of surrent account', createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi'),
@@ -81,7 +47,55 @@ class NotificationsPage extends React.Component {
       	super(props);
         	this.state = {
 				open: false,
+				tableData: [],
 			};
+	}
+
+	getNotifications = async () => {
+		const NOTIFICATIONS_ENDPOINT = SERVER_URL+'/v1/api/app/admin/client-app/notifications';
+		console.log(getToken());
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+		
+		try {
+			let response = await axios.get(NOTIFICATIONS_ENDPOINT, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response.data.data.records;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	componentDidMount(){
+		console.log("component mounted");
+		
+		if (!this.state.tableData.length) {
+			this.getNotifications()
+			.then(tableData => this.setState({tableData}))
+			.catch(err => { /*...handle the error...*/});
+
+			console.log("who is called");
+
+			console.log(this.state.tableData);
+			
+        } else {
+			console.log(this.state.tableData);
+			
+		}
 	}
 
 	openModalHandler = () => {
@@ -98,13 +112,17 @@ class NotificationsPage extends React.Component {
 	
 	render () {
 
-		getNotifications()
-
 		const pageTitle = location ? location.pathname.replace(/\//g, '') : ''
+		
+
+		console.log("called");
+		console.log(this.state.tableData);
+
+		
 
 		/**auth();*/
 
-		if (tdata.length == 0) {
+		if (this.state.tableData.length == 0) {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">
@@ -127,7 +145,7 @@ class NotificationsPage extends React.Component {
         return (
 			<Layout location={location} title={pageTitle}>
 				<div className="n-container">
-					<p className="n-headtext">NOTIFICATIONS ({tdata.length})</p>
+					<p className="n-headtext">NOTIFICATIONS ({this.state.tableData.length})</p>
 					<p>Send notifications to all customers using this channel</p>
 					
 					<div className="n-filterrow">
@@ -187,7 +205,7 @@ class NotificationsPage extends React.Component {
 	
 					<PageTables
 						headers={odata}
-						rows={tdata}>
+						rows={this.state.tableData}>
 					</PageTables>
 				</div>
 			</Layout>
