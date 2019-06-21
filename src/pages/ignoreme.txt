@@ -1,0 +1,93 @@
+const pageTitle = location ? location.pathname.replace(/\//g, '') : ''
+
+		getNotifications().then(res => {
+			tdata = res;
+			console.log("caller");
+			console.log(tdata);
+			return (
+				<Layout location={location} title={pageTitle}>
+					<div className="n-container">
+						<p className="n-headtext">NOTIFICATIONS ({tdata.length})</p>
+						<p>Send notifications to all customers using this channel</p>
+						
+						<div className="n-filterrow">
+							
+							<Button className="n-primarybutton" onClick={this.openModalHandler}>SEND A NOTIFICATION</Button>
+						</div>
+
+						<div>
+							{ this.state.isShowing ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
+							<Modal
+								className="modal"
+								show={this.state.isShowing}
+								close={this.closeModalHandler}
+								header="Send a Notification"
+							>
+								<div className="row">
+									<select>
+										<option value="0">0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+									</select>
+									<div className="right">
+										<p>Type</p>
+										<Tooltip title="Sends Notification within the app">
+											<button className="link-btn">In app</button>
+										</Tooltip>
+										<Tooltip title="Sends Notification within the app">
+											<button className="link-btn">External</button>
+										</Tooltip>
+									</div>
+								</div>
+								<div className="formgroup">
+									<p className="p">Notification Message</p>
+									<textarea className="textarea" rows="10" placeholder="Type your message here"></textarea>
+								</div>
+
+								<button className="btn-continue" onClick={this.closeModalHandler}>SEND</button>
+							</Modal>
+						</div>
+
+						{/**<div>
+							{ this.state.isShowing ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
+							<ModalSub
+								className="modal"
+								show={this.state.isShowing}
+								close={this.closeModalHandler}
+							>
+								<div className="info">
+									<img src="/images/checkmark.png" className="check-img" />
+									<p className="p-text">Notification successfully sent</p>
+								</div>
+							</ModalSub>
+						</div>*/}
+		
+						<PageTables
+							headers={odata}
+							rows={tdata}>
+						</PageTables>
+					</div>
+				</Layout>
+			);
+		}).catch(err=> {
+			return (
+				<Layout location={location} title={pageTitle}>
+					<div className="n-container">
+						<p className="n-headtext">NOTIFICATIONS (0)</p>
+						<p>Send notifications to all customers using this channel</p>
+						
+						<div className="n-box">
+							<img src="/images/safebox.png" className="n-img" />
+							
+							<p className="n-headtext">EMPTY NOTIFICATION</p>
+							<p className="n-center">You haven’t sent any notification, click the <br></br>button below to send one now</p>
+
+							<Button className="n-primarybutton" onClick={this.openModalHandler}>SEND A NOTIFICATION</Button>
+						</div>
+					</div>
+				</Layout>
+			)
+		})

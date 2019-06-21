@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from "axios";
 import PropTypes from 'prop-types'
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import './notifications.css'
 import { navigate } from "gatsby"
 import { isLoggedIn, getToken } from "../services/auth"
@@ -29,26 +31,18 @@ const odata = [
 	passData('Date', 'Message', 'Sort By'),
 ];
 
-function createInitials(createdBy){
-	var a = firstName.split("")[0];
-	var b = lastName.split("")[0];
-	return a+b;
-}
-
-var tdata = [
-	createData('2nd Jun, 2019', 'Enjoy this festive season as with us as we are giving away N1000,000 to 10 lucky owners of surrent account', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
-	createData('25th May, 2019', 'Fraud Alert - Dear customer please do not disclose your internet banking pin, your ATM pin or your Bank verification number BVN to anyone to avoid been scammed', createInitials('Tochi', 'Onuchukwu'), 'Tochi Onuchukwu'),
-	createData('8th Jan, 2019', 'Enjoy this festive season as with us as we are giving away N1000,000 to 10 lucky owners of surrent account', createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi'),
-];
-
 
 class NotificationsPage extends React.Component {
     constructor(props) {
       	super(props);
-        	this.state = {
-				open: false,
-				tableData: [],
-			};
+		this.state = {
+			open: false,
+			tableData: [],
+			scheduleSendingTime: new Date(),
+			message: "",
+			isSuccessful: false,
+		};
+		this.handleDateChange = this.handleDateChange.bind(this);
 	}
 
 	getNotifications = async () => {
@@ -80,6 +74,68 @@ class NotificationsPage extends React.Component {
 		}
 	}
 
+	postNotifications = async () => {
+		const POST_NOTIFICATIONS_ENDPOINT = SERVER_URL+'/v1/api/app/admin/client-app/notification/create';
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+		
+		var sendNow = true;
+		// if(!this.state.scheduleSendingTime==Date.now()){
+		// 	sendNow=false;
+		// }
+
+		let ndata = {
+			"message": this.state.message,
+			"scheduleSendingTime": this.state.scheduleSendingTime,
+			"sendNow": sendNow
+		}
+		
+		try {
+			let response = await axios.post(POST_NOTIFICATIONS_ENDPOINT, ndata, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	handleDateChange(date) {
+		this.setState({
+			scheduleSendingTime: date
+		});
+	}
+
+	handleNotificationInputChange = event => {
+		this.setState({
+			[event.target.name]: event.target.value,
+		})
+	}
+
+	handleSend = event => {
+		this.postNotifications().then(response => {
+			if(response.status === 200){
+				this.setState({
+					isShowing: false,
+					isSuccessful: true
+				});
+			}
+		});
+	}
+
 	componentDidMount(){
 		console.log("component mounted");
 		
@@ -108,17 +164,20 @@ class NotificationsPage extends React.Component {
         this.setState({
             isShowing: false
         });
+	}
+	
+	closeSuccessfulModalHandler = () => {
+        this.setState({
+            isSuccessful: false
+        });
     }
 	
 	render () {
 
 		const pageTitle = location ? location.pathname.replace(/\//g, '') : ''
 		
-
 		console.log("called");
 		console.log(this.state.tableData);
-
-		
 
 		/**auth();*/
 
@@ -162,16 +221,18 @@ class NotificationsPage extends React.Component {
 							header="Send a Notification"
 						>
 							<div className="row">
-								<select>
-									<option value="0">0</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-								</select>
+								<DatePicker
+									name="scheduleSendingTime"
+									className="datepicker"
+									todayButton={"Today"}
+									placeholderText="Pick Date"
+									minDate={new Date()}
+									dateFormat="dd/MM/yyyy"
+									selected={this.state.scheduleSendingTime}
+									onChange={this.handleDateChange}
+								/>
 								<div className="right">
-									<p>Type</p>
+									<p className="type">Type</p>
 									<Tooltip title="Sends Notification within the app">
 										<button className="link-btn">In app</button>
 									</Tooltip>
@@ -182,26 +243,32 @@ class NotificationsPage extends React.Component {
 							</div>
 							<div className="formgroup">
 								<p className="p">Notification Message</p>
-								<textarea className="textarea" rows="10" placeholder="Type your message here"></textarea>
+								<textarea
+									name="message"
+									className="textarea"
+									rows="10"
+									placeholder="Type your message here"
+									onChange={this.handleNotificationInputChange}
+								></textarea>
 							</div>
 
-							<button className="btn-continue" onClick={this.closeModalHandler}>SEND</button>
+							<button className="btn-continue" onClick={this.handleSend}>SEND</button>
 						</Modal>
 					</div>
 
-					{/**<div>
-						{ this.state.isShowing ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
+					<div>
+						{ this.state.isSuccessful ? <div onClick={this.closeSuccessfulModalHandler} className="back-drop"></div> : null }
 						<ModalSub
 							className="modal"
-							show={this.state.isShowing}
-							close={this.closeModalHandler}
+							show={this.state.isSuccessful}
+							close={this.closeSuccessfulModalHandler}
 						>
 							<div className="info">
 								<img src="/images/checkmark.png" className="check-img" />
 								<p className="p-text">Notification successfully sent</p>
 							</div>
 						</ModalSub>
-					</div>*/}
+					</div>
 	
 					<PageTables
 						headers={odata}

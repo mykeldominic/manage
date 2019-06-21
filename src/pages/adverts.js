@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './adverts.css'
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import { navigate } from "gatsby"
 import { isLoggedIn } from "../services/auth"
 import Layout from 'components/Layout'
@@ -19,6 +21,8 @@ import Button from '@material-ui/core/Button'
 	)}
 }**/
 
+const SERVER_URL = 'http://173.255.212.65:8080';
+
 function createData(imgsrc, cardheader, carddate, initials) {
 	return { imgsrc, cardheader, carddate, initials };
 }
@@ -31,7 +35,7 @@ function createInitials(firstName, lastName){
 
 const data = [
 	createData('/images/cardimg1.png', 'Jaiz inter school foot...', 'Jun 16 2019', createInitials('Jonathan', 'Dumebi')),
-	createData('/images/cardimg2.png', 'Jaiz customer reward t...', 'Jul 16 2019', createInitials('Tochi', 'Onuchukwu')),
+	createData('/images/cardimg2.png', 'Jaiz customer reward to get there...', 'Jul 16 2019', createInitials('Tochi', 'Onuchukwu')),
 	createData('/images/cardimg3.png', 'Jaiz ramadan food fest...', 'Aug 16 2019', createInitials('Emeka', 'Azonobi')),
 	createData('/images/cardimg4.png', 'Jaiz ramadan food fest...', 'Aug 16 2019', createInitials('Jonathan', 'Dumebi')),
 	createData('/images/cardimg4.png', 'Jaiz ramadan food fest...', 'Aug 16 2019', createInitials('Tochi', 'Onuchukwu')),
@@ -187,21 +191,25 @@ class AdvertsPage extends React.Component {
 								</div>
 								<div className="rightside">
 									<div className="flex-row">
-										<select>
-											<option value="0">0</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-											<option value="5">5</option>
-										</select>
-										<p className="type">Type</p>
-										<Tooltip title="Sends Notification within the app">
-											<button className="link-btn">In app</button>
-										</Tooltip>
-										<Tooltip title="Sends Notification within the app">
-											<button className="link-btn">External</button>
-										</Tooltip>
+										<DatePicker
+											name="scheduleSendingTime"
+											className="datepicker"
+											todayButton={"Today"}
+											placeholderText="Pick Date"
+											minDate={new Date()}
+											dateFormat="dd/MM/yyyy"
+											selected={this.state.scheduleSendingTime}
+											onChange={this.handleDateChange}
+										/>
+										<div className="side">
+											<p className="type">Type</p>
+											<Tooltip title="Sends Notification within the app">
+												<button className="a-link-btn">In app</button>
+											</Tooltip>
+											<Tooltip title="Sends Notification within the app">
+												<button className="a-link-btn">External</button>
+											</Tooltip>
+										</div>
 									</div>
 									<div className="inputgroup">
 										<p className="a-p">Ad Title</p>

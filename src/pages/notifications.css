@@ -56,16 +56,30 @@
 .row {
     padding: 0;
     margin: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 30px;
     width: 100%;
+}
+
+.datepicker {
+    letter-spacing: 0.02em !important;
+    font-size: 0.9em !important;
+    padding: 10px !important;
+    text-align: center !important;
+    width: 100% !important;
+    border: 1px solid #E0E0E0 !important;
+    border-radius: 3px !important;
+    color: #427A52 !important;
 }
 
 .right {
     display: flex;
     text-align: right;
+}
+
+.type {
+    padding: 0;
 }
 
 .link-btn {
@@ -105,6 +119,8 @@
     background: #FBFBFB;
     border: 0.75px solid #BEBDBD;
     border-radius: 3px;
+    font-size: 1.2em;
+    padding: 10px;
 }
 
 .textarea:focus {

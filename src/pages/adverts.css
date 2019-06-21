@@ -57,7 +57,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 250px auto;
+    grid-template-columns: 220px auto;
     grid-gap: 30px;
     width: 100%;
 }
@@ -69,12 +69,12 @@
 }
 
 .leftside {
-    width: 250px;
+    width: 220px;
 }
 
 .previewComponent {
     position: relative;
-    width: 250px;
+    width: 220px;
     height: 300px;
     background: rgba(179, 140, 10, 0.08);
     border: 1.5px solid #B38C0A;
@@ -87,7 +87,7 @@
 }
 
 .fileInput {
-    width: 250px;
+    width: 220px;
     height: 300px;
     z-index: 2;
     opacity: 0;
@@ -96,20 +96,20 @@
 .imgPreview {
     position: absolute;
     top: 0;
-    width: 246px;
+    width: 216px;
     height: 296px;
     z-index: -1;
 }
 
 .imgPreview img {
-    width: 246px;
+    width: 216px;
     height: 296px;
     object-fit: cover;
     object-position: center center;
 }
 
 .viewImgPreview {
-    width: 250px;
+    width: 220px;
     height: 300px;
     border-radius: 3px;
     object-fit: cover;
@@ -129,20 +129,37 @@
 }
 
 .flex-row {
+    padding: 0;
+    margin: 0;
     display: flex;
     justify-content: space-between;
-    height: 40px;
+    margin-bottom: 30px;
     width: 100%;
+}
+
+.datepicker {
+    letter-spacing: 0.02em !important;
+    font-size: 0.9em !important;
+    padding: 10px !important;
+    text-align: center !important;
+    width: 100% !important;
+    border: 1px solid #E0E0E0 !important;
+    border-radius: 3px !important;
+    color: #427A52 !important;
+}
+
+.side {
+    display: flex;
     text-align: right;
 }
 
 .type {
     padding: 0;
+    padding-top: 10px !important;
     margin: 0;
-    margin-top: 10px;
 }
 
-.link-btn {
+.a-link-btn {
     padding: 0px 20px;
     color: #111111;
     font-weight: bold;
@@ -152,11 +169,11 @@
     margin-left: 12px;
     cursor: pointer;
 }
-.link-btn:hover {
+.a-link-btn:hover {
     outline:none !important;
     border: 1.5px solid #B38C0A;
 }
-.link-btn:focus {
+.a-link-btn:focus {
     outline:none !important;
     background: rgba(179, 140, 10, 0.08);
     border: 1.5px solid #B38C0A;

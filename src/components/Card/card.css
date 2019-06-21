@@ -1,7 +1,8 @@
 .cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 40px;
+    grid-gap: 30px;
+    grid-row-gap: 40px;
     width: 100%;
 }
 
@@ -35,6 +36,7 @@
     position: absolute;
     bottom: 0;
     padding: 15px;
+    width: 100%;
 }
 
 .card-header {
@@ -44,6 +46,11 @@
     color: #232323;
     padding: 0px;
     margin: 0px;
+    display: block;
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .card-date{

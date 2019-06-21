@@ -55,12 +55,13 @@ const styles = theme => ({
     borderBottom: '0.75px solid rgba(224, 224, 224, 0.5)',
   },
   flex: {
-    display: 'grid',
+    display: 'flex',
     gridTemplateColumns: 'repeat(2, auto)',
     borderBottom: '#fff',
+    alignItems: 'center',
   },
 	initials: {
-		padding: '10px',
+		padding: '10px 8px',
     color: '#B38C0A',
     background: 'rgba(179, 140, 10, 0.2)',
     letterSpacing: '0.02em',
@@ -72,6 +73,17 @@ const styles = theme => ({
 
 function PageTables({ data, classes, rows, headers }) {
   console.log(headers)
+
+  var getInitials = function (string) {
+      var names = string.split(' '),
+          initials = names[0].substring(0, 1).toUpperCase();
+      
+      if (names.length > 1) {
+          initials += names[names.length - 1].substring(0, 1).toUpperCase();
+      }
+      return initials;
+  };
+
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -92,7 +104,7 @@ function PageTables({ data, classes, rows, headers }) {
               </StyledTableCell>
               <StyledTableCell className={classes.padding}>{row.message}</StyledTableCell>
               <StyledTableCell className={classNames(classes.tableCell, classes.flex )}>
-                  <div className={classes.initials}>{row.initials}</div>
+                  <div className={classes.initials}>{(getInitials(row.createdBy))}</div>
                   {row.createdBy}
               </StyledTableCell>
             </StyledTableRow>

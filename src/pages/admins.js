@@ -1,8 +1,9 @@
 import React from 'react'
+import axios from "axios";
 import PropTypes from 'prop-types'
 import './adverts.css'
 import { navigate } from "gatsby"
-import { isLoggedIn } from "../services/auth"
+import { isLoggedIn, getToken } from "../services/auth"
 import Layout from 'components/Layout'
 import Modal from 'components/Modal/modal'
 import ModalSub from 'components/Modal/modalsub'
@@ -19,26 +20,7 @@ import Button from '@material-ui/core/Button'
 	)}
 }**/
 
-function createData(initials, name, email) {
-	return { initials, name, email };
-}
-
-function createInitials(firstName, lastName){
-	var a = firstName.split("")[0];
-	var b = lastName.split("")[0];
-	return a+b;
-}
-
-const data = [
-	createData(createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi', 'pet@jaizbankplc.com'),
-	createData(createInitials('Adekunle', 'Bidemi'), 'Adekunle Bidemi', 'adebi@jaizbankplc.com'),
-	createData(createInitials('Oye', 'Adekpotu'), 'Oye Adekpotu', 'oyeade@jaizbankplc.com'),
-	createData(createInitials('Ivyonne', 'Okija'), 'Ivyonne Okija', 'ivyoki@jaizbankplc.com'),
-	createData(createInitials('Femi', 'Udenna'), 'Femi Udenna', 'femude@jaizbankplc.com'),
-	createData(createInitials('Mark', 'Daniel'), 'Mark Daniel', 'marda@jaizbankplc.com'),
-	createData(createInitials('Johnson', 'Dumebi'), 'Johnson Dumebi', 'johdu@jaizbankplc.com'),
-	createData(createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi', 'emeazo@jaizbankplc.com'),
-];
+const SERVER_URL = 'http://173.255.212.65:8080';
 
 
 class AdvertsPage extends React.Component {
@@ -46,7 +28,61 @@ class AdvertsPage extends React.Component {
       	super(props);
         	this.state = {
 				open: false,
+				adminData: [],
+				message: "",
+				isSuccessful: false,
 			};
+	}
+
+	getAdmins = async () => {
+		const ADMIN_ENDPOINT = SERVER_URL+'/v1/api/app/admin/users';
+		console.log(getToken().token);
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+		
+		try {
+			let response = await axios.get(ADMIN_ENDPOINT, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response.data.data.records;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	componentDidMount(){
+		console.log("component mounted");
+		
+		if (!this.state.adminData.length) {
+			
+			
+			this.getAdmins()
+			.then(adminData => this.setState({adminData}))
+			.catch(err => {
+				console.log(err);
+			});
+
+			console.log("who is called");
+
+			console.log(this.state.adminData);
+			
+        } else {
+			console.log(this.state.adminData);
+			
+		}
 	}
 
 	openSendModalHandler = () => {
@@ -85,7 +121,10 @@ class AdvertsPage extends React.Component {
 
 		/**auth();*/
 
-		if (!data) {
+		console.log("called");
+		console.log(this.state.adminData);
+
+		if (this.state.adminData.length == 0) {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">
@@ -108,7 +147,7 @@ class AdvertsPage extends React.Component {
         return (
 			<Layout location={location} title={pageTitle}>
 				<div className="n-container">
-					<p className="n-headtext">ADMINS ({data.length})</p>
+					<p className="n-headtext">ADMINS ({this.state.adminData.length})</p>
 					<p>Easily manage all admins within this app</p>
 					
 					<div className="n-filterrow">
@@ -228,7 +267,7 @@ class AdvertsPage extends React.Component {
 
 					<Cards
 						className="a-cards"
-						cardinfo={data}
+						cardinfo={this.state.adminData}
 						open={this.openViewModalHandler}
 					>
 					</Cards>
