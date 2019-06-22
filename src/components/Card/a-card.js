@@ -27,7 +27,11 @@ const card = ({ props, data, cardinfo }) => {
 
                         <div className="a-card-foot">
                             <Button className="a-edit-btn">EDIT</Button>
-                            <Button className="a-block-btn">BLOCK</Button>
+                            <Button
+                                className="a-block-btn"
+                                // onClick={props.block}
+                                // onClick={ () => this.handleBlock(row.userId) }
+                            >BLOCK</Button>
                             <DeleteIcon className="a-delete-btn" />
                         </div>
                     </div>

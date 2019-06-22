@@ -26,12 +26,16 @@ const SERVER_URL = 'http://173.255.212.65:8080';
 class AdvertsPage extends React.Component {
     constructor(props) {
       	super(props);
-        	this.state = {
-				open: false,
-				adminData: [],
-				message: "",
-				isSuccessful: false,
-			};
+		this.state = {
+			open: false,
+			adminData: [],
+			userId: "",
+			email: "",
+			firstName: "",
+			lastName: "",
+			roleList: ["ADMINISTRATOR"],
+			isSuccessful: false,
+		};
 	}
 
 	getAdmins = async () => {
@@ -63,6 +67,108 @@ class AdvertsPage extends React.Component {
 		}
 	}
 
+	createAdmins = async () => {
+		const CREATE_ADMIN_ENDPOINT = SERVER_URL+'/v1/api/app/admin/user/create';
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+
+		let admindata = {
+			"email": this.state.email,
+			"firstName": this.state.firstName,
+			"lastName": this.state.lastName,
+			"roleList": this.state.roleList
+		}
+		
+		try {
+			let response = await axios.post(CREATE_ADMIN_ENDPOINT, admindata, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	blockAdmins = async () => {
+		const BLOCK_ADMIN_ENDPOINT = SERVER_URL+'/v1/api/app/admin/user/deactivate-account';
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+
+		let adminid = {
+			"userId": this.state.userId
+		}
+		
+		try {
+			let response = await axios.post(BLOCK_ADMIN_ENDPOINT, adminid, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	handleNameInputChange = event => {
+		this.setState({
+			[event.target.name]: event.target.value,
+		})
+	}
+
+	handleEmailInputChange = event => {
+		this.setState({
+			[event.target.name]: event.target.value,
+		})
+	}
+
+	handleCreate = event => {
+		this.createAdmins().then(response => {
+			if(response.status === 200){
+				this.setState({
+					isSendShowing: false,
+					isSuccessful: true
+				});
+			}
+			console.log(response.data.data.firstName, response.data.data.lastName);
+		});
+	}
+
+	handleBlock = event => {
+		this.blockAdmins().then(response => {
+			if(response.status === 200){
+				this.setState({
+					isDeleteShowing: false,
+					isSuccessful: true
+				});
+			}
+		});
+	}
+
 	componentDidMount(){
 		console.log("component mounted");
 		
@@ -71,9 +177,7 @@ class AdvertsPage extends React.Component {
 			
 			this.getAdmins()
 			.then(adminData => this.setState({adminData}))
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => { /*...handle the error...*/});
 
 			console.log("who is called");
 
@@ -114,6 +218,12 @@ class AdvertsPage extends React.Component {
 			isDeleteShowing: false
         });
 	}
+
+	closeSuccessfulModalHandler = () => {
+        this.setState({
+            isSuccessful: false
+        });
+    }
 	
 	render () {
 
@@ -153,7 +263,6 @@ class AdvertsPage extends React.Component {
 					<div className="n-filterrow">
 						
 						<Button className="n-primarybutton" onClick={this.openSendModalHandler}>CREATE ADMIN</Button>
-						<Button className="n-primarybutton" onClick={this.openFeedbackModalHandler}>FEEDBACK</Button>
 						<Button className="n-primarybutton" onClick={this.openViewModalHandler}>VIEW</Button>
 						<Button className="n-primarybutton" onClick={this.openDeleteModalHandler}>DELETE</Button>
 					</div>
@@ -168,17 +277,36 @@ class AdvertsPage extends React.Component {
 						>
 							<div className="c-body-row">
 								<div className="c-inputgroup">
-									<p className="a-p">Admin name</p>
-									<input className="input-field" placeholder="John Doe" />
+									<p className="a-p">Admin first name</p>
+									<input
+										name="firstName"
+										className="input-field"
+										placeholder="John"
+										onChange={this.handleNameInputChange}
+									/>
+								</div>
+								<div className="c-inputgroup">
+									<p className="a-p">Admin last name</p>
+									<input
+										name="lastName"
+										className="input-field"
+										placeholder="Doe"
+										onChange={this.handleNameInputChange}
+									/>
 								</div>
 								<div className="c-inputgroup">
 									<p className="a-p">Admin email</p>
-									<input className="input-field" placeholder="email@domain.com" />
+									<input
+										name="email"
+										className="input-field"
+										placeholder="email@domain.com"
+										onChange={this.handleEmailInputChange}
+									/>
 								</div>
 								
 								<div className="c-buttons">
 									<button className="btn-cancel" onClick={this.closeModalHandler}>CANCEL</button>
-									<button className="btn-post" onClick={this.closeModalHandler}>CREATE</button>
+									<button className="btn-post" onClick={this.handleCreate}>CREATE</button>
 								</div>
 							</div>
 						</Modal>
@@ -249,11 +377,11 @@ class AdvertsPage extends React.Component {
 					</div>
 					
 					<div>
-						{ this.state.isFeedbackShowing ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
+						{ this.state.isSuccessful ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
 						<ModalSub
 							className="modal"
-							show={this.state.isFeedbackShowing}
-							close={this.closeModalHandler}
+							show={this.state.isSuccessful}
+							close={this.closeSuccessfulModalHandler}
 						>
 							<div className="info">
 								<img src="/images/checkmark.png" className="check-img" />
@@ -268,7 +396,7 @@ class AdvertsPage extends React.Component {
 					<Cards
 						className="a-cards"
 						cardinfo={this.state.adminData}
-						open={this.openViewModalHandler}
+						block={this.openViewModalHandler}
 					>
 					</Cards>
 

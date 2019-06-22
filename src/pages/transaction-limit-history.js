@@ -1,8 +1,9 @@
 import React from 'react'
+import axios from "axios";
 import PropTypes from 'prop-types'
 import './notifications.css'
 import { navigate } from "gatsby"
-import { isLoggedIn } from "../services/auth"
+import { isLoggedIn, getToken } from "../services/auth"
 import Layout from 'components/Layout'
 import Typography from '@material-ui/core/Typography'
 import PageTables from 'components/Table/history-table'
@@ -16,6 +17,9 @@ import Button from '@material-ui/core/Button'
 	)}
 }**/
 
+const SERVER_URL = 'http://173.255.212.65:8080';
+
+
 function passData(first, second, third, fourth, fifth) {
 	return { first, second, third, fourth, fifth };
 }
@@ -23,30 +27,78 @@ const odata = [
 	passData('Date', 'Customer', 'Initial limit', 'New limit', 'Handled by'),
 ];
 
-function createData(date, customername, customeraccount, initiallimit, newlimit, initials, handled) {
-	return { date, customername, customeraccount, initiallimit, newlimit, initials, handled };
-}
+// function createData(date, customername, customeraccount, initiallimit, newlimit, initials, handled) {
+// 	return { date, customername, customeraccount, initiallimit, newlimit, initials, handled };
+// }
 
-function createInitials(firstName, lastName){
-	var a = firstName.split("")[0];
-	var b = lastName.split("")[0];
-	return a+b;
-}
+// function createInitials(firstName, lastName){
+// 	var a = firstName.split("")[0];
+// 	var b = lastName.split("")[0];
+// 	return a+b;
+// }
 
-const tdata = [
-	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', 'N100,000', 'N500,000', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
-    createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', 'N200,000', 'N300,000', createInitials('Tochi', 'Onuchukwu'), 'Tochi Onuchukwu'),
-    createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', 'N150,000', 'N500,000', createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi'),
-    createData('2nd Sept, 2019', 'Tochi Onuchukwu', '0149988767', 'N300,000', 'N400,000', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
-];
+// const tdata = [
+// 	createData('2nd Jun, 2019', 'Tochi Onuchukwu', '0149988767', 'N100,000', 'N500,000', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
+//     createData('2nd Jul, 2019', 'Alex Iwobi', '0149988767', 'N200,000', 'N300,000', createInitials('Tochi', 'Onuchukwu'), 'Tochi Onuchukwu'),
+//     createData('2nd Aug, 2019', 'Anthony Joshua', '0149988767', 'N150,000', 'N500,000', createInitials('Emeka', 'Azonobi'), 'Emeka Azonobi'),
+//     createData('2nd Sept, 2019', 'Tochi Onuchukwu', '0149988767', 'N300,000', 'N400,000', createInitials('Jonathan', 'Dumebi'), 'Jonathan Dumebi'),
+// ];
 
 
-class DebitCardRequestPage extends React.Component {
+class TransactionLimitHistoryPage extends React.Component {
     constructor(props) {
       	super(props);
-        	this.state = {
-				open: false,
-			};
+		this.state = {
+			open: false,
+			tableData: []
+		};
+	}
+
+	getTlHistory = async () => {
+		const TLHISTORY_ENDPOINT = SERVER_URL+'/v1/api/app/admin/customer-request/limit-update/history';
+		console.log(getToken());
+		
+		let config = {
+			headers: {
+				"client-key":"julklsjdmmaludnm01#",
+				"Authorization": "Bearer "+getToken().token
+			}
+		}
+		
+		try {
+			let response = await axios.get(TLHISTORY_ENDPOINT, config);
+			
+			if (response.status === 200) {
+				console.log(response)
+				return response.data.data.records;
+			} else {
+				//display error
+				console.log('error');
+				return [];
+			}
+		} catch (error) {
+			console.log("the error")
+			console.log(error);
+			return [];
+		}
+	}
+
+	componentDidMount(){
+		console.log("component mounted");
+		
+		if (!this.state.tableData.length) {
+			this.getTlHistory()
+			.then(tableData => this.setState({tableData}))
+			.catch(err => { /*...handle the error...*/});
+
+			console.log("who is called");
+
+			console.log(this.state.tableData);
+			
+        } else {
+			console.log(this.state.tableData);
+			
+		}
 	}
 	
 	render () {
@@ -55,7 +107,10 @@ class DebitCardRequestPage extends React.Component {
 
 		/**auth();*/
 
-		if (tdata.length == 0) {
+		console.log("called");
+		console.log(this.state.tableData);
+
+		if (this.state.tableData.length == 0) {
 			return (
 				<Layout location={location} title={pageTitle}>
 					<div className="n-container">
@@ -76,7 +131,7 @@ class DebitCardRequestPage extends React.Component {
         return (
 			<Layout location={location} title={pageTitle}>
 				<div className="n-container">
-					<p className="n-headtext">TRANSACTION LIMIT HISTORY ({tdata.length})</p>
+					<p className="n-headtext">TRANSACTION LIMIT HISTORY ({this.state.tableData.length})</p>
                     <p>All handled transaction limit</p>
 					
 					<div className="n-filterrow">
@@ -86,7 +141,7 @@ class DebitCardRequestPage extends React.Component {
 	
 					<PageTables
 						headers={odata}
-						rows={tdata}>
+						rows={this.state.tableData}>
 					</PageTables>
 				</div>
 			</Layout>
@@ -94,9 +149,9 @@ class DebitCardRequestPage extends React.Component {
     }
 };
 
-DebitCardRequestPage.propTypes = {
+TransactionLimitHistoryPage.propTypes = {
 	data: PropTypes.object.isRequired,
 	location: PropTypes.object,
 }
 
-export default DebitCardRequestPage
+export default TransactionLimitHistoryPage

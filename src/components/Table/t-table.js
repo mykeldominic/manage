@@ -136,21 +136,21 @@ function PageTables({ data, classes, rows, headers }) {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <StyledTableRow key={row.date} className={classes.tableRow}>
+            <StyledTableRow key={row.id} className={classes.tableRow}>
               <StyledTableCell className={classes.tableCell} component="th" scope="row">
-                    {row.date}
+                  {row.dateCreated}
               </StyledTableCell>
               <StyledTableCell className={classes.padding}>
-                    <p style={{ padding: '0', margin: '0' }}>{row.customername}</p>
-                    <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.customerphone}</p>
+                  <p style={{ padding: '0', margin: '0' }}>{row.account.accountName}</p>
+                  <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.account.accountNumber}</p>
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.initiallimit}
+                  {row.currentLimitAmount}
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.newlimit}
+                  {row.requestedLimitAmount}
               </StyledTableCell>
-              <StyledTableCell className={classes.tableCell}>
+              <StyledTableCell className={classes.tableCell} style={{ display: 'flex', border: 'none' }}>
                     <Button className={classes.approvebutton}>Approve</Button>
                     <Button className={classes.declinebutton}>Decline</Button>
               </StyledTableCell>

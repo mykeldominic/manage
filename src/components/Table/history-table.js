@@ -119,6 +119,17 @@ const styles = theme => ({
 
 function PageTables({ data, classes, rows, headers }) {
   console.log(headers)
+
+  var getInitials = function (string) {
+      var names = string.split(' '),
+          initials = names[0].substring(0, 1).toUpperCase();
+      
+      if (names.length > 1) {
+          initials += names[names.length - 1].substring(0, 1).toUpperCase();
+      }
+      return initials;
+  };
+
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -135,23 +146,23 @@ function PageTables({ data, classes, rows, headers }) {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <StyledTableRow key={row.date} className={classes.tableRow}>
+            <StyledTableRow key={row.id} className={classes.tableRow}>
               <StyledTableCell className={classes.tableCell} component="th" scope="row">
-                    {row.date}
+                  {row.dateCreated}
               </StyledTableCell>
               <StyledTableCell className={classes.padding}>
-                    <p style={{ padding: '0', margin: '0' }}>{row.customername}</p>
-                    <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.customeraccount}</p>
+                  <p style={{ padding: '0', margin: '0' }}>{row.account.accountName}</p>
+                  <p style={{ padding: '0', margin: '0', marginTop: '7px', fontSize: '0.9em', color: '#727272' }}>{row.account.accountNumber}</p>
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.card}{row.leaves}{row.initiallimit}
+                  {row.card}{row.leaves}{row.currentLimitAmount}
               </StyledTableCell>
               <StyledTableCell className={classes.tableCell}>
-                    {row.branch}{row.newlimit}
+                  {row.branch}{row.requestedLimitAmount}
               </StyledTableCell>
               <StyledTableCell className={classNames(classes.tableCell, classes.flex )}>
-                  <div className={classes.initials}>{row.initials}</div>
-                  {row.handled}
+                  <div className={classes.initials}>{(getInitials(row.handledBy))}</div>
+                  {row.handledBy}
               </StyledTableCell>
             </StyledTableRow>
           ))}
