@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[15],{274:function(e,a,n){"use strict";n.r(a);n(56);var t=n(0),o=n.n(t),c=n(1),l=n.n(c),p=n(296),r=n(428);function i(e){var a=e.location,n=a?a.pathname.replace(/\//g,""):"";return o.a.createElement(p.a,{location:a,title:n},o.a.createElement(r.a,null))}i.propTypes={location:l.a.object},a.default=i}}]);
+//# sourceMappingURL=component---src-pages-forgot-password-js-3dcf9167a572d8a6c1b4.js.map
